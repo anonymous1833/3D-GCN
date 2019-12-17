@@ -68,8 +68,6 @@ def main():
                         help='learning rate')
     parser.add_argument('--seed', type=int, default=1, metavar='S',
                         help='random seed')
-    parser.add_argument('--division', type=str, default='regular', metavar='D',
-                        help='the spatial division (regular or irregular)')
     parser.add_argument('--K', type=int, default='9', metavar='K',
                         help='number of partitions')
     parser.add_argument('--C', type=int, default='2', metavar='C',
@@ -82,26 +80,22 @@ def main():
                         help='load checkpoint/epoch_x.tar (x>0)')
     args = parser.parse_args()
 
-    train_loader = torch.utils.data.DataLoader(PopulationDataset(division=args.division,
-                                                                 T=args.T,
+    train_loader = torch.utils.data.DataLoader(PopulationDataset(T=args.T,
                                                                  type='train'),
                                                batch_size=args.test_batch,
                                                shuffle=True)
 
-    val_loader = torch.utils.data.DataLoader(PopulationDataset(division=args.division,
-                                                               T=args.T,
+    val_loader = torch.utils.data.DataLoader(PopulationDataset(T=args.T,
                                                                type='val'),
                                              batch_size=args.test_batch,
                                              shuffle=False)
 
-    test_loader = torch.utils.data.DataLoader(PopulationDataset(division=args.division,
-                                                                T=args.T,
+    test_loader = torch.utils.data.DataLoader(PopulationDataset(T=args.T,
                                                                 type='test'),
                                               batch_size=args.test_batch,
                                               shuffle=False)
 
-    model = Model(division=args.division,
-                  C=args.C,
+    model = Model(C=args.C,
                   K=args.K,
                   T=args.T)
 
@@ -114,9 +108,9 @@ def main():
     model.A_mean = Variable(model.A_mean).cuda()
     model.I = Variable(model.I).cuda()
 
-    label = np.load('poi/' + args.division + '_label.npy').astype(np.int64)
-    label_idx = np.load('poi/' + args.division + '_idx.npy').astype(np.int64)
-    label_weight = np.load('poi/' + args.division + '_weight.npy').astype(np.float32)
+    label = np.load('../data/irregular__label.npy').astype(np.int64)
+    label_idx = np.load('../data/irregular_idx.npy').astype(np.int64)
+    label_weight = np.load('../data/irregular_weight.npy').astype(np.float32)
     
     label = torch.from_numpy(label[label_idx])
     label_idx = torch.from_numpy(label_idx)
@@ -126,7 +120,7 @@ def main():
     label_weight = Variable(label_weight).cuda()
 
     if args.load > 0:
-        model.load_state_dict(torch.load('checkpoint/epoch_' + str(args.load) + '.tar'))
+        model.load_state_dict(torch.load('epoch_' + str(args.load) + '.tar'))
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
     criterion = nn.MSELoss(size_average=True)
@@ -148,9 +142,9 @@ def main():
             val_loss_min = val_loss
             test_loss_min = test_loss
         if epoch % 100 == 0:
-            torch.save(model.state_dict(), 'checkpoint/epoch_' + str(epoch) + '.tar')
+            torch.save(model.state_dict(), 'epoch_' + str(epoch) + '.tar')
 
-    np.save('checkpoint/loss.npy', loss)
+    np.save('loss.npy', loss)
     print("Val RMSE: %.4f \tTest RMSE: %.4f\n" % (
         val_loss_min, test_loss_min))
 

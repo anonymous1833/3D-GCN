@@ -6,7 +6,6 @@ import numpy as np
 class Model(nn.Module):
 
     def __init__(self,
-                 division='regular',
                  C=2,
                  K=9,
                  T=5):
@@ -17,14 +16,14 @@ class Model(nn.Module):
         self.T = T
         self.Gamma = 1
 
-        A = np.load('path/' + division + '_path.npy')
+        A = np.load('../data/irregular_path.npy')
         A_0 = A[:, :, :, 0]
         A_sum = np.sum(A[:, :, :, 1:], axis=3)
         for i in range(1, K + 1):
             A[:, :, :, i] = A_sum
         self.A = torch.Tensor(A)
 
-        feature = np.load('poi/' + division + '_feature.npy').astype(np.float32)
+        feature = np.load('../data/irregular_feature.npy').astype(np.float32)
 
         feature_size = np.size(feature, 1)
         V = np.size(feature, 0)

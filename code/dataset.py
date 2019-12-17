@@ -7,7 +7,6 @@ import numpy as np
 class PopulationDataset(Dataset):
 
     def __init__(self,
-                 division='regular',
                  T=5,
                  type='train'):
         len_t = 24 * (31 + 31 + 30)
@@ -18,14 +17,8 @@ class PopulationDataset(Dataset):
         weekend = [i for i in range(1, 93, 7)] + [i for i in range(2, 93, 7)] + [4, 66]
         T_SLOT = 24
         C = 2
-        if division == 'regular':
-            H = 16
-            W = 8
-            num_node = H * W
-            raw_data = json.load(open("flow/flow_bike_nyc_regular.json"))
-        elif division == 'irregular':
-            num_node = 82
-            raw_data = json.load(open("flow/flow_bike_nyc_irregular.json"))
+        num_node = 82
+        raw_data = json.load(open("../data/flow_bike_nyc_irregular.json"))
 
         dataset = np.zeros((C, len_t, num_node), dtype=np.float32)
         data1 = raw_data['inflow']
