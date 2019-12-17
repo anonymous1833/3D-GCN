@@ -21,10 +21,10 @@ The dataset contains 2208 time intervals, spanning from Jul. 1st to Sept. 30th, 
 
 - /data
   - flow_bike_nyc_irregular.json contains the inflow, outflow obtained from the dataset
-  - irregular_feature.npy is the poi features of all regions $\bm{F}$
-  - irregular_idx.npy is the index of labeled regions $\mathcal{V}_L$ 
-  - irregular_label.npy is the labels of all regions $\bm{\Omega}$
-  - irregular_weight.npy is the normalization term $frac{1}{|\mathcal{V}_L^{\Omega_i}|}$
+  - irregular_feature.npy is the poi features of all regions ![](http://latex.codecogs.com/gif.latex?\\bm{F})
+  - irregular_idx.npy is the index of labeled regions ![](http://latex.codecogs.com/gif.latex?\\mathcal{V}_L)
+  - irregular_label.npy is the labels of all regions ![](http://latex.codecogs.com/gif.latex?\\bm{\\Omega})
+  - irregular_weight.npy is the normalization term ![](http://latex.codecogs.com/gif.latex?\\frac{1}{|\\mathcal{V}_L^{\\Omega_i}|})
   - irregular_path.npy contains the historical flow paths for the irregular dataset
 - /code
   - main.py ***run this file to get the results of 3D-GCN in our paper***
